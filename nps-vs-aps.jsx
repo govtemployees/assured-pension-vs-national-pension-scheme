@@ -270,6 +270,22 @@ export default function App() {
   const [adv, setAdv] = useState(false);
   const [pvOn, setPvOn] = useState(false);
 
+  const presets = {
+    conservative: { npsRet: 8, annRate: 5.5, annualDA: 5, postDR: 3.5, inf: 6.5 },
+    moderate: { npsRet: 10, annRate: 6, annualDA: 6, postDR: 4, inf: 6 },
+    optimistic: { npsRet: 12, annRate: 6.5, annualDA: 7, postDR: 4.5, inf: 5.5 },
+  };
+
+  const applyPreset = key => {
+    const p = presets[key];
+    if (!p) return;
+    setNpsRet(p.npsRet);
+    setAnnRate(p.annRate);
+    setAnnualDA(p.annualDA);
+    setPostDR(p.postDR);
+    setInf(p.inf);
+  };
+
   const R = useMemo(() => simulate({
     dob, joinYear, retAge, basic, currentDA, annualDA, incRate,
     npsRet, annRate, govPct, postDR, inf,
@@ -448,6 +464,12 @@ export default function App() {
           {/* ═══ CONFIGURATION ═══ */}
           <div style={{ ...glass, padding: 28, marginBottom: 20 }}>
             <Sec icon="⚙️" sub="Your service profile for personalized projections">Configure</Sec>
+            <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+              <Pill color="#6e56cf">Scenario Presets</Pill>
+              <button onClick={() => applyPreset("conservative")} style={{ borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "rgba(255,255,255,0.6)", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer", color: "#1d1d1f" }}>Conservative</button>
+              <button onClick={() => applyPreset("moderate")} style={{ borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "rgba(255,255,255,0.6)", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer", color: "#1d1d1f" }}>Moderate</button>
+              <button onClick={() => applyPreset("optimistic")} style={{ borderRadius: 999, border: "1px solid rgba(0,0,0,0.08)", background: "rgba(255,255,255,0.6)", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer", color: "#1d1d1f" }}>Optimistic</button>
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 18 }}>
               <GlassInput label="Date of Birth" value={dob} onChange={setDob} type="date" />
               <GlassInput label="Joining Year" value={joinYear} onChange={setJoinYear} min={2004} max={2045} />
